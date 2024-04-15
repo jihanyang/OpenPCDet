@@ -53,9 +53,16 @@ pip install nuscenes-devkit==1.0.5
 
 * Generate the data infos by running the following command (it may take several hours): 
 ```python 
+# for lidar-only setting
 python -m pcdet.datasets.nuscenes.nuscenes_dataset --func create_nuscenes_infos \
     --cfg_file tools/cfgs/dataset_configs/nuscenes_dataset.yaml \
     --version v1.0-trainval
+
+# for multi-modal setting
+python -m pcdet.datasets.nuscenes.nuscenes_dataset --func create_nuscenes_infos \
+    --cfg_file tools/cfgs/dataset_configs/nuscenes_dataset.yaml \
+    --version v1.0-trainval \
+    --with_cam
 ```
 
 ### Waymo Open Dataset
@@ -107,6 +114,37 @@ python -m pcdet.datasets.waymo.waymo_dataset --func create_waymo_infos \
 ```
 
 Note that you do not need to install `waymo-open-dataset` if you have already processed the data before and do not need to evaluate with official Waymo Metrics. 
+
+### Argoverse2 Dataset
+* Download the **Argoverse 2 Sensor Dataset** from the [official website](https://www.argoverse.org/av2.html#download-link), and then extract them.
+* Install the official API of Argoverse 2
+```shell
+pip install av2==0.2.0
+```
+* Generate info files for `train` and `val`. 
+```python
+python -m pcdet.datasets.argo2.argo2_dataset --root_path data/argo2/sensor --output_dir data/argo2
+```
+- Note that this [issue](https://github.com/argoverse/av2-api/issues/102) from the argo2 api might be noticed. 
+- If the CPU memory of your machine is limited, you can set `--workers=0` in the training script.
+- The organized files are as follows:
+```
+OpenPCDet
+├── data
+│   ├── argo2
+│   │   │── ImageSets
+│   │   │   ├──train.txt & val.txt
+│   │   │── training
+│   │   │   ├──velodyne
+│   │   │── sensor
+│   │   │   ├──val
+│   │   │── argo2_infos_train.pkl
+│   │   │── argo2_infos_val.pkl
+│   │   │── val_anno.feather
+
+├── pcdet
+├── tools
+```
 
 
 ### ONCE Dataset
